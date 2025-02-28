@@ -1,16 +1,31 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./paginas/Dashboard";
-import Cliente from "./paginas/Cliente";
+import AdminDashboard from "./componentes/AdminDashboard";
+import ClientDashboard from "./componentes/ClientDashboard";
+import Login from "./componentes/Login";
+import { useEffect, useState } from "react";
 
-function App() {
+const App = () => {
+  const [user, setUser] = useState(null);
+  // Verificamos si el usuario ya está logueado al cargar la aplicación
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/cliente/:id" element={<Cliente />} />
-      </Routes>
-    </Router>
+    <div className="app">
+      {!user ? (
+        <Login setUser={setUser} />
+      ) : user.role === "admin" ? (
+        <AdminDashboard user={user} />
+      ) : (
+        <ClienteDashboard user={user} />
+      )}
+      ;
+    </div>
   );
-}
+};
 
 export default App;
