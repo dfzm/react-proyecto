@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ setUser }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,6 +22,8 @@ const Login = ({ setUser }) => {
 
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
+
+      navigate(role === "admin" ? "/admin" : "/client");
     } else {
       setError("Por favor, ingrese su nombre de usuario y su contraseña.");
     }

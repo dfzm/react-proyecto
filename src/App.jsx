@@ -1,8 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./componentes/Login";
 import AdminDashboard from "./componentes/AdminDashboard";
 import ClientDashboard from "./componentes/ClientDashboard";
-import Login from "./componentes/Login";
-import { useEffect, useState } from "react";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -15,16 +20,44 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app">
-      {!user ? (
-        <Login setUser={setUser} />
-      ) : user.role === "admin" ? (
-        <AdminDashboard user={user} />
-      ) : (
-        <ClienteDashboard user={user} />
-      )}
-      ;
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route
+          path="/admin"
+          element={
+            user && user.role === "admin" ? (
+              <AdminDashboard user={user} setUser={setUser} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/client"
+          element={
+            user && user.role === "client" ? (
+              <ClientDashboard user={user} setUser={setUser} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="*"
+          element={
+            user ? (
+              <Navigate
+                to={user.role === "admin" ? "/admin" : "/client"}
+                replace
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 
