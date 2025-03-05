@@ -4,10 +4,15 @@ import { useNavigate } from "react-router-dom";
 const ClientDashboard = ({ user, setUser }) => {
   const navigate = useNavigate();
 
+  if (!user) {
+    navigate("/login", { replace: true });
+    return null;
+  }
+
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   };
   return (
     <div>

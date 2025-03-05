@@ -11,7 +11,7 @@ import ClientDashboard from "./componentes/ClientDashboard";
 
 const App = () => {
   const [user, setUser] = useState(null);
-  // Verificamos si el usuario ya está logueado al cargar la aplicación
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -20,44 +20,33 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route
-          path="/admin"
-          element={
-            user && user.role === "admin" ? (
-              <AdminDashboard user={user} setUser={setUser} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/client"
-          element={
-            user && user.role === "client" ? (
-              <ClientDashboard user={user} setUser={setUser} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="*"
-          element={
-            user ? (
-              <Navigate
-                to={user.role === "admin" ? "/admin" : "/client"}
-                replace
-              />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-      </Routes>
-    </Router>
+    <main>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login setUser={setUser} />} />
+          <Route
+            path="/admin"
+            element={
+              user ? (
+                <AdminDashboard user={user} setUser={setUser} />
+              ) : (
+                <Login setUser={setUser} />
+              )
+            }
+          />
+          <Route
+            path="/cliente"
+            element={
+              user ? (
+                <ClientDashboard user={user} setUser={setUser} />
+              ) : (
+                <Login setUser={setUser} />
+              )
+            }
+          />
+        </Routes>
+      </Router>
+    </main>
   );
 };
 

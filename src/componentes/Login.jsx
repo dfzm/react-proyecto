@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ setUser }) => {
@@ -8,25 +8,33 @@ const Login = ({ setUser }) => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [setUser]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (username && password) {
-      let role = "client";
+    let role = "";
 
-      if (username === "admin" && password === "admin") {
-        role = "admin";
-      }
-
-      const userData = { username, password, role };
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
-
-      navigate(role === "admin" ? "/admin" : "/client");
+    if (username === "admin" && password === "admin") {
+      role = "admin";
+    } else if (username === "cliente" && password === "cliente") {
+      role = "cliente";
     } else {
-      setError("Por favor, ingrese su nombre de usuario y su contraseña.");
+      setError("Usuario o contraseña incorrectos.");
+      return;
     }
+
+    const userData = { username, role };
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    // Redirigir al dashboard correspondiente
+    navigate(role === "admin" ? "/admin" : "/cliente");
   };
   return (
     <div className="login-container">

@@ -4,10 +4,15 @@ import { useNavigate } from "react-router-dom";
 const AdminDashboard = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("user"); // Elimina la información del usuario
-    setUser(null); // Actualiza el estado para que el usuario esté deslogueado
+  if (!user) {
     navigate("/login", { replace: true });
+    return null;
+  }
+  const logout = () => {
+    localStorage.removeItem("user");
+
+    setUser(null);
+    navigate("/", { replace: true });
   };
 
   return (
