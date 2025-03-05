@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./componentes/Login";
 import AdminDashboard from "./componentes/AdminDashboard";
+import ClientProyect from "./componentes/ClientProyect";
 import ClientDashboard from "./componentes/ClientDashboard";
 
 const App = () => {
@@ -24,15 +25,20 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Login setUser={setUser} />} />
+
           <Route
             path="/admin"
             element={
               user ? (
                 <AdminDashboard user={user} setUser={setUser} />
               ) : (
-                <Login setUser={setUser} />
+                <Navigate setUser={setUser} />
               )
             }
+          />
+          <Route
+            path="/admin/cliente/:id"
+            element={user ? <ClientProyect user={user} /> : <Navigate to="/" />}
           />
           <Route
             path="/cliente"
@@ -40,7 +46,7 @@ const App = () => {
               user ? (
                 <ClientDashboard user={user} setUser={setUser} />
               ) : (
-                <Login setUser={setUser} />
+                <Navigate setUser={setUser} />
               )
             }
           />
